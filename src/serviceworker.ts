@@ -13,7 +13,6 @@ interface UserActivity {
   
   // Function to process data if it exists in local storage
   function processData(data: UserActivity[]): void {
-    // Your logic to process the data goes here
     console.log('Processing data:', data);
   }
   
@@ -29,7 +28,6 @@ interface UserActivity {
     }
   }
   
-  // Interval for checking local storage (5 minutes in milliseconds)
   const CHECK_INTERVAL = 5000;
   
   // Set up an interval to check local storage every 5 minutes
@@ -37,24 +35,20 @@ interface UserActivity {
   
   // Add an event listener to listen for install event
   self.addEventListener('install', (event: ExtendableEvent) => {
-    // Perform installation steps if needed
     console.log('Service Worker installed');
   
-    self.skipWaiting(); // Activate service worker immediately
+    self.skipWaiting();
   });
   
   // Add an event listener to listen for activate event
   self.addEventListener('activate', (event: ExtendableEvent) => {
-    // Perform activation steps if needed
     console.log('Service Worker activated');
     clients.claim(); // Take control of all open pages
   });
   
   // Add an event listener to intercept fetch requests
   self.addEventListener('fetch', (event: FetchEvent) => {
-    // Your custom fetch handling logic goes here
-    // You can customize the behavior for fetching resources
-    // or caching strategies, but for this example, we won't modify it.
+    //Fetch logic
     event.respondWith(fetch(event.request));
   });
   
