@@ -1,42 +1,36 @@
 "use strict";
-// serviceworker.ts
-// Function to set dummy local storage data
-function setDummyLocalStorageData() {
-    const data = [{ name: 'mamun' }];
-    localStorage.setItem('userActivityCollection', JSON.stringify(data));
-}
-// Function to process data if it exists in local storage
-function processData(data) {
-    console.log('Processing data:', data);
-}
-// Function to check local storage and call processData
-function checkLocalStorageAndProcessData() {
-    const storedData = localStorage.getItem('userActivityCollection');
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+self.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "addUserActivity") {
+        const newActivity = event.data.data;
+        addUserActivityToCollection(newActivity);
+    }
+});
+// Handle events when the tab is closed or the browser is closed
+self.addEventListener("beforeunload", (event) => __awaiter(void 0, void 0, void 0, function* () {
+    const storedData = localStorage.getItem("userActivityCollection");
+    let userActivityCollection;
     if (storedData !== null) {
-        const userActivityCollection = JSON.parse(storedData);
-        processData(userActivityCollection);
+        userActivityCollection = JSON.parse(storedData);
     }
     else {
-        console.log('No data found in local storage.');
+        userActivityCollection = [];
     }
-}
-const CHECK_INTERVAL = 5000;
-// Set up an interval to check local storage every 5 minutes
-setInterval(checkLocalStorageAndProcessData, CHECK_INTERVAL);
-// Add an event listener to listen for install event
-self.addEventListener('install', (event) => {
-    console.log('Service Worker installed');
-    self.skipWaiting();
-});
-// Add an event listener to listen for activate event
-self.addEventListener('activate', (event) => {
-    console.log('Service Worker activated');
-    clients.claim(); // Take control of all open pages
-});
-// Add an event listener to intercept fetch requests
-self.addEventListener('fetch', (event) => {
-    //Fetch logic
-    event.respondWith(fetch(event.request));
-});
-// Call setDummyLocalStorageData to initialize local storage with dummy data
-setDummyLocalStorageData();
+    try {
+        const signedUrl = yield requestSignedUrl();
+        if (signedUrl) {
+            yield uploadToGoogleStorage(userActivityCollection, signedUrl);
+        }
+    }
+    catch (error) {
+        console.error("Error during upload:", error.message);
+    }
+}));

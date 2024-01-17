@@ -7,3 +7,4 @@ if('serviceWorker' in navigator){
         console.log('servcei worker resigtration falied:', err);
     })
 }
+
