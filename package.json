@@ -6,6 +6,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@types/serviceworker": "^0.0.82"
+    "@types/serviceworker": "^0.0.82",
+    "@types/web": "^0.0.135"
   }
 }

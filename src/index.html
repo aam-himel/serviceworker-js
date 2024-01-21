@@ -3,12 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Tab Data Sync</title>
   </head>
   <body>
-    <h1>hello</h1>
+    <!-- <script>
+      function updateLocalStorage(data) {
+        const userActivity =
+          JSON.parse(localStorage.getItem("userActivity")) || [];
+        userActivity.push(data);
+        localStorage.setItem("userActivity", JSON.stringify(userActivity));
+        console.log("Data pushed to userActivity:", data);
+      }
 
+      function syncDataToGoogleCloud() {
+        const userActivity = JSON.parse(localStorage.getItem("userActivity"));
+        console.log("Sending userActivity to Google Cloud:", userActivity);
+      }
+
+      const updateInterval = 10000; // 1 second in milliseconds
+      const updateIntervalId = setInterval(() => {
+        const newData = { timestamp: Date.now() };
+        updateLocalStorage(newData);
+      }, updateInterval);
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          // Tab is hidden (user changed tab)
+          syncDataToGoogleCloud();
+        }
+      });
+
+      window.addEventListener("beforeunload", () => {
+        // Clear the interval to stop updating local storage
+        clearInterval(updateIntervalId);
+
+        // Make a final call to the cloud server before closing the browser
+        syncDataToGoogleCloud();
+      });
+    </script> -->
     <script src="../build/userActivity.js"></script>
-    <script src="../build/serviceworker.js"></script>
   </body>
 </html>
