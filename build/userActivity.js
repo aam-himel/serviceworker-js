@@ -1,9 +1,25 @@
 "use strict";
-var _a;
+var _a, _b, _c, _d;
+var testActivity1 = {
+    type: "type1",
+    count: 111,
+};
+var testActivity2 = {
+    type: "type2",
+    count: 3434,
+};
+var testActivity3 = {
+    type: "type3",
+    count: 232,
+};
+var testActivity4 = {
+    type: "type4",
+    count: 112,
+};
 const APP = {
     SW: null,
     activityValue: {
-        name: ''
+        name: "",
     },
     init() {
         APP.registerSW();
@@ -28,30 +44,20 @@ const APP = {
             navigator.serviceWorker.oncontrollerchange = (ev) => {
                 console.log("New service worker activated");
             };
-            navigator.serviceWorker.addEventListener("message", APP.onMessage);
-            let person = {
-                id: Date.now(),
-                name: "mamun",
-                color: "blue1",
-            };
-            APP.sendMessage({ addPerson: person });
         }
         else {
             console.log("Service workers are not supported.");
         }
     },
     sendMessage(msg) {
-        //send some structured-cloneable data from the webpage to the sw
         if (navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage(msg);
         }
     },
     onMessage({ data }) {
-        //got a message from the service worker
         console.log("Web page receiving", data);
     },
 };
-// APP.sendMessage({ saveToLocalStorage: userActivity });
 function addUserActivityToCollection(userActivity) {
     const storedData = localStorage.getItem("userActivityCollection");
     let userActivityCollection;
@@ -64,12 +70,37 @@ function addUserActivityToCollection(userActivity) {
     userActivityCollection.push(userActivity);
     localStorage.setItem("userActivityCollection", JSON.stringify(userActivityCollection));
 }
-const newActivity = { name: "Example Activity" };
-(_a = document.getElementById('activity')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
-    addUserActivityToCollection(newActivity);
+(_a = document.getElementById("activity1")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+    if (testActivity1.type === "type1") {
+        addUserActivityToCollection(testActivity1);
+    }
 });
-const TIME_INTERVAL = 5 * 60 * 1000;
+(_b = document.getElementById("activity2")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", function () {
+    if (testActivity2.type === "type2") {
+        addUserActivityToCollection(testActivity2);
+    }
+});
+(_c = document.getElementById("activity3")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function () {
+    if (testActivity3.type === "type3") {
+        addUserActivityToCollection(testActivity3);
+    }
+});
+(_d = document.getElementById("activity4")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function () {
+    if (testActivity4.type === "type4") {
+        addUserActivityToCollection(testActivity4);
+    }
+});
 setInterval(() => {
-    addUserActivityToCollection(newActivity);
-}, TIME_INTERVAL);
+    const saveActivity = {
+        saveActivity: {
+            id: 123,
+            name: "John Doe",
+            age: 30,
+        },
+    };
+    APP.sendMessage(saveActivity);
+}, 5000);
 document.addEventListener("DOMContentLoaded", APP.init);
+document.addEventListener("message", (ev) => {
+    console.log("new messge received!");
+});
