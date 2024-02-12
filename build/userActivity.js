@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var _a, _b, _c, _d;
 var testActivity1 = {
     type: "type1",
@@ -90,16 +99,102 @@ function addUserActivityToCollection(userActivity) {
         addUserActivityToCollection(testActivity4);
     }
 });
-setInterval(() => {
-    const saveActivity = {
-        saveActivity: {
-            id: 123,
-            name: "John Doe",
-            age: 30,
+// const TIMEINTERVAL = 60 * 1000;
+// setInterval(() => {
+//   const saveActivity = {
+//     saveActivity: {
+//       id: 123,
+//       name: "John Doe",
+//       age: 30,
+//     },
+//   };
+//   APP.sendMessage(saveActivity);
+// }, TIMEINTERVAL);
+const getSignedUrlAndSentDataToGCP = (activityData) => {
+    const activityJSON = JSON.stringify(activityData);
+    // generate json file
+    const blob = new Blob([activityJSON], { type: "application/json" });
+    const fileName = "activity.json";
+    const expiration = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+    // options for signed URL
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
         },
     };
-    APP.sendMessage(saveActivity);
-}, 5000);
+    // Fetch the signed URL from your server
+    // fetch(
+    //   `https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`
+    // )
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to obtain signed URL");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(({ signedUrl }) => {
+    //     console.log("signed url", signedUrl);
+    //     return fetch(signedUrl, {
+    //       method: "PUT",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: blob,
+    //     });
+    //   })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to upload JSON data to GCS");
+    //     }
+    //     console.log("JSON data uploaded successfully");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
+    fetch("https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test")
+        .then((value) => {
+        console.log(value);
+    })
+        .catch((err) => console.log("error", err));
+};
+function getDataFromLocalStorage() {
+    const storedData = localStorage.getItem("userActivityCollection");
+    console.log("Stored data:", storedData);
+    let userActivityCollection;
+    if (storedData !== null) {
+        try {
+            userActivityCollection = JSON.parse(storedData);
+        }
+        catch (error) {
+            console.error("Error parsing JSON:", error);
+            return [];
+        }
+    }
+    else {
+        userActivityCollection = [];
+    }
+    return userActivityCollection;
+}
+// const localdata: any = getDataFromLocalStorage();
+// getSignedUrlAndSentDataToGCP(localdata);
+const generateUrl = () => __awaiter(void 0, void 0, void 0, function* () {
+    // fetch(
+    //   "https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test"
+    // )
+    //   .then((value: Response) => {
+    //     // Specify Response type
+    //     console.log(value);
+    //   })
+    //   .catch((err) => console.log("error", err));
+    fetch(`https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`)
+        .then((res) => res.json())
+        .then((res) => {
+        // res is now an Actor
+        console.log(res);
+    });
+});
+generateUrl();
 document.addEventListener("DOMContentLoaded", APP.init);
 document.addEventListener("message", (ev) => {
     console.log("new messge received!");
