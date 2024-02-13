@@ -123,41 +123,62 @@ const getSignedUrlAndSentDataToGCP = (activityData) => {
             "Content-Type": "application/json",
         },
     };
-    fetch(`https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`)
-        .then((response) => {
-        if (!response.ok) {
-            throw new Error("Failed to obtain signed URL");
-        }
-        return response.json();
-    })
-        .then(({ signedUrl }) => {
-        console.log("signed url", signedUrl);
-        return fetch(signedUrl, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: blob,
-        });
-    })
-        .then((response) => {
-        if (!response.ok) {
-            throw new Error("Failed to upload JSON data to GCS");
-        }
-        console.log("JSON data uploaded successfully");
-    })
-        .catch((error) => {
-        console.error("Error:", error);
-    });
+    // Fetch the signed URL from your server
+    // fetch(
+    //   `https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`
+    // )
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to obtain signed URL");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(({ signedUrl }) => {
+    //     console.log("signed url", signedUrl);
+    //     return fetch(signedUrl, {
+    //       method: "PUT",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: blob,
+    //     });
+    //   })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to upload JSON data to GCS");
+    //     }
+    //     console.log("JSON data uploaded successfully");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
     fetch("https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test")
         .then((value) => {
         console.log(value);
     })
         .catch((err) => console.log("error", err));
 };
+function getDataFromLocalStorage() {
+    const storedData = localStorage.getItem("userActivityCollection");
+    console.log("Stored data:", storedData);
+    let userActivityCollection;
+    if (storedData !== null) {
+        try {
+            userActivityCollection = JSON.parse(storedData);
+        }
+        catch (error) {
+            console.error("Error parsing JSON:", error);
+            return [];
+        }
+    }
+    else {
+        userActivityCollection = [];
+    }
+    return userActivityCollection;
+}
 // const localdata: any = getDataFromLocalStorage();
 // getSignedUrlAndSentDataToGCP(localdata);
-const generateUrlTest = () => __awaiter(void 0, void 0, void 0, function* () {
+const generateUrl = () => __awaiter(void 0, void 0, void 0, function* () {
     // fetch(
     //   "https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test"
     // )

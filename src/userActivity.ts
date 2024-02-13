@@ -152,35 +152,34 @@ const getSignedUrlAndSentDataToGCP = (activityData: UserActivityCollection) => {
     },
   };
 
-  // Fetch the signed URL from your server
-  // fetch(
-  //   `https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`
-  // )
-  //   .then((response) => {
-  //     if (!response.ok) {
-  //       throw new Error("Failed to obtain signed URL");
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(({ signedUrl }) => {
-  //     console.log("signed url", signedUrl);
-  //     return fetch(signedUrl, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: blob,
-  //     });
-  //   })
-  //   .then((response) => {
-  //     if (!response.ok) {
-  //       throw new Error("Failed to upload JSON data to GCS");
-  //     }
-  //     console.log("JSON data uploaded successfully");
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
+  fetch(
+    `https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to obtain signed URL");
+      }
+      return response.json();
+    })
+    .then(({ signedUrl }) => {
+      console.log("signed url", signedUrl);
+      return fetch(signedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: blob,
+      });
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to upload JSON data to GCS");
+      }
+      console.log("JSON data uploaded successfully");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
   fetch(
     "https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test"
@@ -191,30 +190,10 @@ const getSignedUrlAndSentDataToGCP = (activityData: UserActivityCollection) => {
     .catch((err) => console.log("error", err));
 };
 
-function getDataFromLocalStorage(): UserActivityCollection {
-  const storedData = localStorage.getItem("userActivityCollection");
-
-  console.log("Stored data:", storedData);
-
-  let userActivityCollection: UserActivityCollection;
-
-  if (storedData !== null) {
-    try {
-      userActivityCollection = JSON.parse(storedData);
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      return [];
-    }
-  } else {
-    userActivityCollection = [];
-  }
-  return userActivityCollection;
-}
-
 // const localdata: any = getDataFromLocalStorage();
 // getSignedUrlAndSentDataToGCP(localdata);
 
-const generateUrl = async () => {
+const generateUrlTest = async () => {
   // fetch(
   //   "https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test"
   // )
