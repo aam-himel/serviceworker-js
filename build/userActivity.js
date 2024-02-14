@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var _a, _b, _c, _d;
 var testActivity1 = {
     type: "type1",
@@ -99,6 +90,10 @@ function addUserActivityToCollection(userActivity) {
         addUserActivityToCollection(testActivity4);
     }
 });
+document.addEventListener("DOMContentLoaded", APP.init);
+document.addEventListener("message", (ev) => {
+    console.log("new messge received!");
+});
 // const TIMEINTERVAL = 60 * 1000;
 // setInterval(() => {
 //   const saveActivity = {
@@ -110,71 +105,3 @@ function addUserActivityToCollection(userActivity) {
 //   };
 //   APP.sendMessage(saveActivity);
 // }, TIMEINTERVAL);
-const getSignedUrlAndSentDataToGCP = (activityData) => {
-    const activityJSON = JSON.stringify(activityData);
-    // generate json file
-    const blob = new Blob([activityJSON], { type: "application/json" });
-    const fileName = "activity.json";
-    const expiration = new Date(Date.now() + 15 * 60 * 1000).toISOString();
-    // options for signed URL
-    const requestOptions = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-    fetch(`https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`)
-        .then((response) => {
-        if (!response.ok) {
-            throw new Error("Failed to obtain signed URL");
-        }
-        return response.json();
-    })
-        .then(({ signedUrl }) => {
-        console.log("signed url", signedUrl);
-        return fetch(signedUrl, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: blob,
-        });
-    })
-        .then((response) => {
-        if (!response.ok) {
-            throw new Error("Failed to upload JSON data to GCS");
-        }
-        console.log("JSON data uploaded successfully");
-    })
-        .catch((error) => {
-        console.error("Error:", error);
-    });
-    fetch("https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test")
-        .then((value) => {
-        console.log(value);
-    })
-        .catch((err) => console.log("error", err));
-};
-// const localdata: any = getDataFromLocalStorage();
-// getSignedUrlAndSentDataToGCP(localdata);
-const generateUrlTest = () => __awaiter(void 0, void 0, void 0, function* () {
-    // fetch(
-    //   "https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test"
-    // )
-    //   .then((value: Response) => {
-    //     // Specify Response type
-    //     console.log(value);
-    //   })
-    //   .catch((err) => console.log("error", err));
-    fetch(`https://testmongo.bdjobs.com/analyticsengine/api/CloudStorage?fileName=test`)
-        .then((res) => res.json())
-        .then((res) => {
-        // res is now an Actor
-        console.log(res);
-        return res;
-    });
-});
-document.addEventListener("DOMContentLoaded", APP.init);
-document.addEventListener("message", (ev) => {
-    console.log("new messge received!");
-});
